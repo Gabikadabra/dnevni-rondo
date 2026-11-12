@@ -64,6 +64,8 @@ Zatim otvori `/admin`. Provjera se radi na serveru u middlewareu, stranici i sva
 - Pas je besplatan, prekida niz i vraća slovo u drugi krug s jednim pokušajem. Svakih pet uzastopnih točnih odgovora server dodaje pet sekundi.
 - RLS ne dopušta izravan pristup klijenta tablici s rješenjima ni dnevnoj ploči. Baza dopušta igraču čitati samo svoje partije i odgovore. Javna ljestvica izlaže nadimak, bodove i preostalo vrijeme; ne izlaže UUID igrača.
 - Dnevni duh računa prosjek jučerašnjih dovršenih rezultata po slovu. Za slovo bez dovoljno podataka koristi zadani profil.
+- Početna stranica prikazuje lige korisnika i njihove dnevne/tjedne/lifetime statistike, osobni učinak te tjednu ljestvicu. Rezultati skrivenih ili blokiranih računa nisu uključeni.
+- Igrači na terenu predstavljaju slova; pogrešan odgovor ili pas pokreće animaciju protivnika koji istrčava iz sredine i osvaja loptu. Temu terena moguće je odabrati između stadiona, noćne utakmice, retro izgleda i hrvatskih boja.
 - Admin ploče upozoravaju kad je za slovo manje od 14 aktivnih pitanja. Seed donosi po jedno početno pitanje; dodajte još pitanja kroz admin sučelje ili CSV da bi dnevna ploča mijenjala sadržaj.
 
 ## Početna banka pitanja
