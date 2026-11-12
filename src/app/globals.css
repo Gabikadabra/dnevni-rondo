@@ -24,3 +24,4 @@
 @media(max-width:700px){.header-actions{flex-wrap:wrap;justify-content:flex-end}.theme-control{height:33px}.league-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.league-standings li{grid-template-columns:22px 1fr 45px auto}.league-card{padding:10px}}
 @media(prefers-reduced-motion:reduce){.center-ghost,.player-wrap,.player{transition:none!important;animation:none!important}.stolen-ball{animation:none!important}}
 html[data-theme="croatia"] .brand-ball{background:linear-gradient(135deg,#fff 0 24%,#d52b3e 24% 48%,#fff 48% 72%,#15569a 72%);color:#fff;text-shadow:0 1px 4px #142d49}.theme-control:focus-within,.league-code:hover{border-color:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 15%,transparent)}
+.game-pitch.play-correct .player-wrap.just-played .player{animation-duration:1.35s}.game-pitch.play-wrong .player-wrap.just-played .player,.game-pitch.play-skipped .player-wrap.just-played .player{animation-duration:1.35s}

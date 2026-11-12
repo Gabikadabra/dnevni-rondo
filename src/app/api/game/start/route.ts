@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   const skipped = new Set((answers ?? []).filter((a) => a.outcome === "skipped").map((a) => a.letter));
   const roundTwoDone = new Set((answers ?? []).filter((a) => a.round === 2).map((a) => a.letter));
   const nextLetter = LETTERS.find((l) => !doneLetters.has(l)) ?? LETTERS.find((l) => skipped.has(l) && !roundTwoDone.has(l));
-  const remaining = game ? Math.max(0, Math.ceil((new Date(game.started_at).getTime() + 240000 + (game.bonus_seconds ?? 0) * 1000 - Date.now()) / 1000)) : 240;
+  const remaining = game ? Math.max(0, Math.ceil((new Date(game.started_at).getTime() + 240000 + (game.bonus_seconds ?? 0) * 1000 + (game.paused_milliseconds ?? 0) - Date.now()) / 1000)) : 240;
   const { data: profile } = await db.from("profiles").select("nickname,streak,longest_streak").eq("id", user.id).maybeSingle();
   return NextResponse.json({ game, nickname: nickname || profile?.nickname || "", streak: profile?.streak ?? 0, longestStreak: profile?.longest_streak ?? 0, questions: ordered.map((q: any) => ({ letter: q.letter, question: q.prompt })), nextIndex: nextLetter ? LETTERS.indexOf(nextLetter) : 30, nextLetter, round: doneLetters.size < 30 ? 1 : 2, emojis: LETTERS.map((l) => { const a = (answers ?? []).filter((x) => x.letter === l).at(-1); return a ? a.outcome === "correct" ? "🟦" : a.outcome === "wrong" ? "🟥" : "⬜" : ""; }), remaining, locked: !!board.locked });
 }

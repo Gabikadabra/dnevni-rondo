@@ -14,7 +14,7 @@ export async function POST() {
   const { data: game } = await db.from("games").select("*").eq("user_id", user.id).eq("date", date).maybeSingle();
   if (!game) return NextResponse.json({ error: "Partija nije pronađena." }, { status: 404 });
   if (!game.finished_at) {
-    const elapsed = (Date.now() - new Date(game.started_at).getTime()) / 1000;
+    const elapsed = (Date.now() - new Date(game.started_at).getTime()) / 1000 - (game.paused_milliseconds ?? 0) / 1000;
     const { data: board } = await db.from("daily_boards").select("question_ids").eq("date", date).single();
     const { data: existing } = await db.from("game_answers").select("letter,outcome,round").eq("game_id", game.id);
     const seen = new Set((existing ?? []).map((x) => `${x.letter}:${x.round}`));
