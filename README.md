@@ -1,6 +1,6 @@
 # Dnevni Rondo
 
-Potpuni izvorni projekt dnevne kviz igre na hrvatskom: Next.js App Router, TypeScript, Tailwind, Supabase Auth i Postgres, pripremljen za Vercel. Igrači koriste anonimnu prijavu i nadimak; rješenja se čitaju i provjeravaju samo u server API-ju. Točni odgovori šalju se igraču tek kad njegova partija završi.
+Potpuni izvorni projekt dnevne kviz igre na hrvatskom: Next.js App Router, TypeScript, Tailwind, Supabase Auth i Postgres, pripremljen za Vercel. Igrači se prijavljuju Google računom ili e-poštom; rješenja se čitaju i provjeravaju samo u server API-ju. Točni odgovori šalju se igraču tek kad njegova partija završi.
 
 ## Sadržaj projekta
 
@@ -18,7 +18,7 @@ supabase/seed.sql        početno pitanje za svako od 30 slova
 
 1. Napravite Supabase projekt.
 2. U SQL Editoru pokrenite `supabase/schema.sql`, zatim jednom `supabase/seed.sql`.
-3. Supabase → Authentication → Providers: uključite Anonymous sign-ins i Email. U URL Configuration upišite lokalnu adresu `http://localhost:3000` te konačnu Vercel domenu. Dodajte dopuštene redirect putanje `/auth/callback` i `/admin`.
+3. Supabase → Authentication → Providers: isključite Anonymous sign-ins te uključite Email i Google. U URL Configuration upišite lokalnu adresu `http://localhost:3000` te konačnu Vercel domenu. Dodajte dopuštene redirect putanje `/auth/callback` i `/admin`.
 4. Kopirajte `.env.example` u `.env.local` i unesite:
 
    - `NEXT_PUBLIC_SUPABASE_URL` — Project URL
@@ -34,12 +34,12 @@ Supabase ključeve nemojte stavljati u `NEXT_PUBLIC_` varijablu osim anon ključ
 
 1. U Google Cloud Consoleu napravite OAuth Client ID tipa Web application. Kao Authorized redirect URI unesite Supabase callback URL prikazan u Supabase → Authentication → Providers → Google. Oblik je `https://<project-ref>.supabase.co/auth/v1/callback`.
 2. U Supabaseu uključite Google provider i zalijepite Client ID i Client Secret. Supabase koristi te podatke; ne dodaju se kao Vercel varijable.
-3. U Supabase → Authentication → Settings uključite **Allow manual linking** (potrebno za povezivanje Googlea s anonimnim računom). U Auth URL Configuration dopustite `http://localhost:3000/auth/callback` i `https://<vercel-domena>/auth/callback`.
-4. Na početnoj stranici **Poveži Google račun** veže Google identitet uz trenutni anonimni profil, pa se zadržavaju bodovi i streak. **Već imaš povezani Google račun? Prijavi se** služi prijavi na drugom uređaju. Dostupne su iste dvije radnje i za e-poštu.
+3. U Supabase → Authentication → URL Configuration dopustite `http://localhost:3000/auth/callback` i `https://<vercel-domena>/auth/callback`.
+4. Na početnoj stranici igrač se prijavljuje Googleom ili poveznicom poslanom e-poštom. Anonimne prijave nisu dio aplikacije.
 
 ## Prvi administrator
 
-Na početnoj stranici povežite svoj Google račun ili e-poštu s anonimnim profilom. U Supabase → Authentication → Users pronađite taj korisnik i kopirajte UUID. U SQL Editoru pokrenite:
+Prijavite se na `/admin` Google računom ili e-poštom. Ako još niste admin, stranica će prikazati UUID vašeg računa i gumb za kopiranje SQL naredbe. Pokrenite je u Supabase → SQL Editoru:
 
 ```sql
 insert into public.admins(user_id)

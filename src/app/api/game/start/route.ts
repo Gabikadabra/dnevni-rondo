@@ -8,7 +8,7 @@ const today = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Zagreb"
 export async function POST(req: Request) {
   const auth = await createClient();
   const { data: { user } } = await auth.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Prijava je potrebna." }, { status: 401 });
+  if (!user || user.is_anonymous) return NextResponse.json({ error: "Prijava Google računom ili e-poštom je potrebna." }, { status: 401 });
   const body = await req.json().catch(() => ({}));
   const nickname = String(body.nickname ?? "").trim().slice(0, 24);
   const db = adminDb();

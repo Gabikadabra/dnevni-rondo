@@ -6,7 +6,7 @@ const today = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Zagreb"
 
 export async function POST(req: Request) {
   const auth = await createClient(), { data: { user } } = await auth.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Prijava je potrebna." }, { status: 401 });
+  if (!user || user.is_anonymous) return NextResponse.json({ error: "Prijava Google računom ili e-poštom je potrebna." }, { status: 401 });
   const body = await req.json().catch(() => ({})), db = adminDb(), date = today();
   const { data: profile } = await db.from("profiles").select("blocked").eq("id", user.id).maybeSingle();
   if (profile?.blocked) return NextResponse.json({ error: "Ovaj račun ne može nastaviti igru." }, { status: 403 });

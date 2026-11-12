@@ -4,7 +4,7 @@ import { adminDb } from "@/lib/supabase/admin";
 
 export async function GET() {
   const auth = await createClient(), { data: { user } } = await auth.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Prijava je potrebna." }, { status: 401 });
+  if (!user || user.is_anonymous) return NextResponse.json({ error: "Prijava Google računom ili e-poštom je potrebna." }, { status: 401 });
   const db = adminDb();
   const { data: memberships } = await db.from("league_members").select("league_id").eq("user_id", user.id);
   const ids = (memberships ?? []).map((m) => m.league_id);
@@ -22,7 +22,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const auth = await createClient(), { data: { user } } = await auth.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Prijava je potrebna." }, { status: 401 });
+  if (!user || user.is_anonymous) return NextResponse.json({ error: "Prijava Google računom ili e-poštom je potrebna." }, { status: 401 });
   const body = await req.json().catch(() => ({})), db = adminDb();
   if (body.action === "create") {
     const name = String(body.name ?? "").trim().slice(0, 40);

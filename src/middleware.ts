@@ -51,22 +51,6 @@ export async function middleware(req: NextRequest) {
     data: { user },
   } = await s.auth.getUser();
 
-  if (req.nextUrl.pathname.startsWith("/admin")) {
-    // Logged-out visitors can reach the email-link sign-in screen. A logged-in
-    // non-admin still receives a real 404, and API routes repeat this check.
-    if (!user) return res;
-
-    const { data } = await s
-      .from("admins")
-      .select("user_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (!data) {
-      return new NextResponse(null, { status: 404 });
-    }
-  }
-
   return res;
 }
 
