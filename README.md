@@ -18,7 +18,7 @@ supabase/seed.sql        početno pitanje za svako od 30 slova
 
 1. Napravite Supabase projekt.
 2. U SQL Editoru pokrenite `supabase/schema.sql`, zatim jednom `supabase/seed.sql`.
-3. Supabase → Authentication → Providers: uključite Anonymous sign-ins i Email. U URL Configuration upišite lokalnu adresu `http://localhost:3000` te konačnu Vercel domenu. Ako traži redirect pattern, dodajte `/admin` i root putanju.
+3. Supabase → Authentication → Providers: uključite Anonymous sign-ins i Email. U URL Configuration upišite lokalnu adresu `http://localhost:3000` te konačnu Vercel domenu. Dodajte dopuštene redirect putanje `/auth/callback` i `/admin`.
 4. Kopirajte `.env.example` u `.env.local` i unesite:
 
    - `NEXT_PUBLIC_SUPABASE_URL` — Project URL
@@ -30,16 +30,31 @@ supabase/seed.sql        početno pitanje za svako od 30 slova
 
 Supabase ključeve nemojte stavljati u `NEXT_PUBLIC_` varijablu osim anon ključa. `.env.local` je u `.gitignore`; service role ključ nikad se ne uvozi u browser komponente.
 
+## Google prijava
+
+1. U Google Cloud Consoleu napravite OAuth Client ID tipa Web application. Kao Authorized redirect URI unesite Supabase callback URL prikazan u Supabase → Authentication → Providers → Google. Oblik je `https://<project-ref>.supabase.co/auth/v1/callback`.
+2. U Supabaseu uključite Google provider i zalijepite Client ID i Client Secret. Supabase koristi te podatke; ne dodaju se kao Vercel varijable.
+3. U Supabase → Authentication → Settings uključite **Allow manual linking** (potrebno za povezivanje Googlea s anonimnim računom). U Auth URL Configuration dopustite `http://localhost:3000/auth/callback` i `https://<vercel-domena>/auth/callback`.
+4. Na početnoj stranici **Poveži Google račun** veže Google identitet uz trenutni anonimni profil, pa se zadržavaju bodovi i streak. **Već imaš povezani Google račun? Prijavi se** služi prijavi na drugom uređaju. Dostupne su iste dvije radnje i za e-poštu.
+
 ## Prvi administrator
 
-Otvorite `/admin`, unesite svoju e-poštu i otvorite pristiglu poveznicu. Dok vaš UUID još nije dodan u tablicu `admins`, zaštićena stranica nakon prijave ispravno vraća 404. U Supabase → Authentication → Users kopirajte ID svog računa i pokrenite:
+Na početnoj stranici povežite svoj Google račun ili e-poštu s anonimnim profilom. U Supabase → Authentication → Users pronađite taj korisnik i kopirajte UUID. U SQL Editoru pokrenite:
 
 ```sql
 insert into public.admins(user_id)
 values ('OVDJE-UUID-VAŠEG-KORISNIKA');
 ```
 
-Zatim ponovno otvorite `/admin`. Provjera se radi na serveru u middlewareu, stranici i svakoj admin API ruti. Admin sučelje uključuje filtriranje, straničenje, dodavanje/uređivanje/deaktivaciju pitanja, CSV, 30-dnevni kalendar, automatski i ručni odabir buduće ploče, testni pregled, statistiku, igrače, lige i moderiranje rezultata. Današnje i prošle ploče nisu moguće mijenjati.
+Možeš ga dodati i izravno e-poštom:
+
+```sql
+insert into public.admins(user_id)
+select id from auth.users where lower(email)=lower('tvoja@adresa.hr')
+on conflict (user_id) do nothing;
+```
+
+Zatim otvori `/admin`. Provjera se radi na serveru u middlewareu, stranici i svakoj admin API ruti. Admin sučelje uključuje filtriranje, straničenje, dodavanje/uređivanje/deaktivaciju pitanja, CSV, 30-dnevni kalendar, automatski i ručni odabir buduće ploče, testni pregled, statistiku, igrače, lige i moderiranje rezultata. Današnje i prošle ploče nisu moguće mijenjati.
 
 ## Pravila i sigurnost
 
