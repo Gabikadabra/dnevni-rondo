@@ -28,7 +28,7 @@ supabase/seed.sql        početno pitanje za svako od 30 slova
 5. U mapi projekta pokrenite `npm install` pa `npm run dev`. Otvorite `http://localhost:3000`.
 6. Uvezite repozitorij u Vercel i unesite iste tri varijable u Project Settings → Environment Variables za Preview i Production. Nakon deploya dodajte produkcijsku domenu u Supabase URL Configuration.
 
-Kad ažurirate postojeći projekt na verziju s pauzom animacije, ponovno pokrenite ažurirani `supabase/schema.sql` u SQL Editoru. Skripta dodaje idempotentni stupac `paused_milliseconds` i ažurira atomarnu funkciju za provjeru odgovora.
+Kad ažurirate postojeći projekt, ponovno pokrenite ažurirani `supabase/schema.sql` u SQL Editoru. Skripta sigurno ažurira postojeće tablice i politike te dodaje `paused_milliseconds`, temu i postavku zvuka u profil igrača.
 
 Supabase ključeve nemojte stavljati u `NEXT_PUBLIC_` varijablu osim anon ključa. `.env.local` je u `.gitignore`; service role ključ nikad se ne uvozi u browser komponente.
 

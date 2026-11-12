@@ -9,6 +9,8 @@
     last_play_date date,
     hidden boolean not null default false,
     blocked boolean not null default false,
+  theme text not null default 'stadium' check (theme in ('stadium','night','retro','croatia')),
+  sound_enabled boolean not null default true,
     created_at timestamptz not null default now()
   );
 
@@ -83,6 +85,8 @@
   -- Idempotent upgrade path for the starter schema in the supplied project.
   alter table public.profiles add column if not exists hidden boolean not null default false;
   alter table public.profiles add column if not exists blocked boolean not null default false;
+alter table public.profiles add column if not exists theme text not null default 'stadium';
+alter table public.profiles add column if not exists sound_enabled boolean not null default true;
   alter table public.games add column if not exists hidden_from_board boolean not null default false;
   alter table public.games add column if not exists paused_milliseconds integer not null default 0;
   alter table public.games drop constraint if exists games_remaining_seconds_check;
